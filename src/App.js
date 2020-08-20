@@ -1,26 +1,70 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
+
+import './App.css';
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  
+} from 'react-router-dom';
+import HomePage from './HomePage.js';
+import AuthPage from './AuthPage.js';
+import TodoPage from './TodoPage.js';
 import './App.css';
 
-function App() {
+export default class App extends Component {
+  state = {
+    token: localStorage.getItem('token'),
+  }
+
+  handleToken = (token) => {
+this.setState({ token: token })
+localStorage.setItem( 'token', token)
+  }
+
+  clearToken = () => {
+    this.setState({ token: ''})
+
+    localStorage.setItem('token', '')
+  }
+
+  render() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+      <Router>
+                    <main>
+
+                    <div className="sidebar">
+                    
+                    
+                    </div>
+                    <div className="content">
+                    <Switch>
+                    
+                        <Route 
+                            path="/" 
+                            exact
+                            render={(routerProps) => <HomePage {...routerProps} />} 
+                        />
+                        <Route 
+                            path="/authorize" 
+                            exact
+                            render={(routerProps) => <AuthPage handleToken={this.handleToken} {...routerProps} />} 
+                        />
+                        <Route 
+                            path="/todo" 
+                            exact
+                            render={(routerProps) => <TodoPage token={this.state.token} {...routerProps} />} 
+                        />
+                    </Switch>
+                    </div>
+                    
+                    </main>
+                    </Router>
       </header>
     </div>
   );
 }
 
-export default App;
+}
